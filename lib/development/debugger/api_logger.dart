@@ -214,6 +214,7 @@ class _ApiLoggerState extends State<ApiLogger> {
                       .pushNamed('/details', arguments: requestModel);
                 },
                 trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     GestureDetector(
                         onTap: () async {
