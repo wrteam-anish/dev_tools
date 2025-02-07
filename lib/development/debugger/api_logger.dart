@@ -201,9 +201,12 @@ class _ApiLoggerState extends State<ApiLogger> {
     return ValueListenableBuilder(
         valueListenable: apiRequests.listenable,
         builder: (context, List<RequestModel> value, c) {
-          return ListView.builder(
+          return ListView.separated(
             itemCount: value.length,
             shrinkWrap: true,
+            separatorBuilder: (context, index) {
+              return const Divider();
+            },
             itemBuilder: (context, index) {
               final RequestModel requestModel = value[index];
               return ListTile(
@@ -248,9 +251,6 @@ class _ApiLoggerState extends State<ApiLogger> {
                             );
                           },
                           child: Chip(label: Text('Copy cURL'))),
-                      IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.arrow_right_sharp)),
                     ],
                   ),
                 ),
