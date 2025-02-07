@@ -114,6 +114,45 @@ class _ApiLoggerState extends State<ApiLogger> {
                         ),
                       ),
                     )),
+                const SizedBox(
+                  width: 10,
+                ),
+                GestureDetector(
+                    onTap: () async {
+                      String cUrl = generateCurlCommand({
+                        'url': requestModel.requestOptions.path,
+                        'method': requestModel.requestOptions.method,
+                        'headers': requestModel.requestOptions.headers.entries
+                            .map(
+                              (value) {
+                                return '${value.key}: ${value.value}';
+                              },
+                            )
+                            .toList()
+                            .join(','),
+                        'body': requestModel.requestOptions.method != 'GET'
+                            ? requestModel.requestOptions.data
+                            : parseQueryParameters(requestModel),
+                      },
+                          isMultipart: requestModel.requestOptions.listFormat ==
+                              ListFormat.multiCompatible);
+                      await Clipboard.setData(ClipboardData(text: cUrl));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Copied to clipboard'),
+                        ),
+                      );
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.all(4.0),
+                      child: Text(
+                        'Copy cURL',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.teal,
+                        ),
+                      ),
+                    )),
               ],
             ),
           ),
@@ -216,44 +255,7 @@ class _ApiLoggerState extends State<ApiLogger> {
                   _navigatorKey.currentState!
                       .pushNamed('/details', arguments: requestModel);
                 },
-                trailing: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.2,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      GestureDetector(
-                          onTap: () async {
-                            String cUrl = generateCurlCommand({
-                              'url': requestModel.requestOptions.path,
-                              'method': requestModel.requestOptions.method,
-                              'headers':
-                                  requestModel.requestOptions.headers.entries
-                                      .map(
-                                        (value) {
-                                          return '${value.key}: ${value.value}';
-                                        },
-                                      )
-                                      .toList()
-                                      .join(','),
-                              'body':
-                                  requestModel.requestOptions.method != 'GET'
-                                      ? requestModel.requestOptions.data
-                                      : parseQueryParameters(requestModel),
-                            },
-                                isMultipart:
-                                    requestModel.requestOptions.listFormat ==
-                                        ListFormat.multiCompatible);
-                            await Clipboard.setData(ClipboardData(text: cUrl));
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Copied to clipboard'),
-                              ),
-                            );
-                          },
-                          child: Chip(label: Text('Copy cURL'))),
-                    ],
-                  ),
-                ),
+                trailing: const Icon(Icons.arrow_forward_ios),
                 subtitle: Row(
                   children: [
                     Text('Method: ${requestModel.requestOptions.method}'),
