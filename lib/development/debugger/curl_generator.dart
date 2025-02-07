@@ -15,13 +15,16 @@ String generateCurlCommand(Map<String, dynamic> data,
   }
 
   // Handle normal or multipart body (only for methods like POST, PUT)
-  if (isMultipart) {
-    body.forEach((key, value) {
-      curlCommand += ' -F "$key=${Uri.encodeComponent(value.toString())}"';
-    });
-  } else if (body.isNotEmpty) {
-    curlCommand += ' -d';
-    curlCommand += ' "${jsonEncode(body)}"'; // Convert Map to JSON string
+
+  if (method != 'GET') {
+    if (isMultipart) {
+      body.forEach((key, value) {
+        curlCommand += ' -F "$key=${Uri.encodeComponent(value.toString())}"';
+      });
+    } else if (body.isNotEmpty) {
+      curlCommand += ' -d';
+      curlCommand += ' "${jsonEncode(body)}"'; // Convert Map to JSON string
+    }
   }
 
   return curlCommand;
