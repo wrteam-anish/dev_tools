@@ -214,7 +214,7 @@ class _ApiLoggerState extends State<ApiLogger> {
                       .pushNamed('/details', arguments: requestModel);
                 },
                 trailing: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.4,
+                  width: MediaQuery.of(context).size.width * 0.2,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -254,8 +254,20 @@ class _ApiLoggerState extends State<ApiLogger> {
                     ],
                   ),
                 ),
-                subtitle: Text(
-                    'Method: ${requestModel.requestOptions.method}  Status: ${requestModel.response?.statusCode ?? "--"}'),
+                subtitle: Row(
+                  children: [
+                    Text('Method: ${requestModel.requestOptions.method}'),
+                    Text.rich(TextSpan(children: [
+                      const TextSpan(text: '  Status: '),
+                      TextSpan(
+                          text: "${requestModel.response?.statusCode ?? "--"}",
+                          style: TextStyle(
+                              color: requestModel.response?.statusCode == 200
+                                  ? Colors.green
+                                  : Colors.red))
+                    ])),
+                  ],
+                ),
               );
             },
           );

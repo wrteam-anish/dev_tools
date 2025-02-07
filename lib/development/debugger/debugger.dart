@@ -6,46 +6,45 @@ import 'package:flutter/material.dart';
 
 class Debugger {
   static bool isExpanded = false;
-  static void init(BuildContext context) {
-    if (kDebugMode) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (timeStamp) {
-          OverlayEntry entry = OverlayEntry(
-              builder: (context) => DraggableOverlay(
-                      child: GestureDetector(
-                    onTap: () async {
-                      if (!isExpanded) {
-                        isExpanded = true;
-                        await showModalBottomSheet(
-                          context: context,
-                          constraints: BoxConstraints(
-                              maxHeight:
-                                  MediaQuery.of(context).size.height * 0.7),
-                          builder: (context) {
-                            return const DebuggerView();
-                          },
-                        );
 
-                        isExpanded = false;
-                      } else {
-                        isExpanded = false;
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.brown.shade900,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(Icons.settings, color: Colors.white),
+  static void init(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        OverlayEntry entry = OverlayEntry(
+            builder: (context) => DraggableOverlay(
+                    child: GestureDetector(
+                  onTap: () async {
+                    if (!isExpanded) {
+                      isExpanded = true;
+                      await showModalBottomSheet(
+                        context: context,
+                        constraints: BoxConstraints(
+                            maxHeight:
+                                MediaQuery.of(context).size.height * 0.7),
+                        builder: (context) {
+                          return const DebuggerView();
+                        },
+                      );
+
+                      isExpanded = false;
+                    } else {
+                      isExpanded = false;
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.brown.shade900,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                  )));
-          Overlay.of(context).insert(entry);
-        },
-      );
-    }
+                    child: const Icon(Icons.settings, color: Colors.white),
+                  ),
+                )));
+        Overlay.of(context).insert(entry);
+      },
+    );
   }
 }
 
