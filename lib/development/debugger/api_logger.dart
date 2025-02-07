@@ -232,7 +232,10 @@ class _ApiLoggerState extends State<ApiLogger> {
                             'body': requestModel.requestOptions.method != 'GET'
                                 ? requestModel.requestOptions.data
                                 : parseQueryParameters(requestModel),
-                          });
+                          },
+                              isMultipart:
+                                  requestModel.requestOptions.listFormat ==
+                                      ListFormat.multiCompatible);
                           await Clipboard.setData(ClipboardData(text: cUrl));
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
