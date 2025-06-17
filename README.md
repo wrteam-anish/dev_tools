@@ -41,14 +41,15 @@ Add this to your package's `pubspec.yaml` file:
 ```yaml
 dependencies:
   dev_tools:
-    path: ../dev_tools  # Use the correct path to the package
+    git:
+      url: https://github.com/wrteam-anish/dev_tools.git
 ```
 
 ## Usage
 
 ### 1. Initialize the Debugger
 
-In your `main.dart` file, initialize the debugger:
+In your `main.dart` file, initialize the debugger in your app's root widget:
 
 ```dart
 void main() {
@@ -59,13 +60,32 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Builder(
-        builder: (context) {
-          // Initialize debugger
-          Debugger.init(context);
-          return YourHomePage();
-        },
-      ),
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    // Initialize debugger after the widget is mounted
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+
+    ///Make sure material widget is present
+      Debugger.init(context);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      // Your app content
     );
   }
 }
