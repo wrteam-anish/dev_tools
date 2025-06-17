@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
+import 'dart:developer';
+
 import 'package:dev_tools/development/debugger/curl_generator.dart';
 import 'package:dev_tools/development/debugger/stream_list.dart';
 import 'package:dio/dio.dart';
@@ -61,6 +63,22 @@ class _ApiLoggerState extends State<ApiLogger> {
         }
       },
     );
+  }
+
+  static String generateCurl(RequestOptions options) {
+    return generateCurlCommand({
+      'url': options.path,
+      'method': options.method,
+      'headers': options.headers.entries
+          .map(
+            (value) {
+              return '${value.key}: ${value.value}';
+            },
+          )
+          .toList()
+          .join(','),
+      'body': options.method != 'GET' ? options.data : options.queryParameters,
+    }, isMultipart: options.listFormat == ListFormat.multiCompatible);
   }
 
   Widget buildDetails(RequestModel requestModel) {
@@ -281,6 +299,8 @@ class ApiLoggerInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     apiRequests.addItem(RequestModel(requestOptions: options));
+    log(_ApiLoggerState.generateCurl(options));
+
     handler.next(options);
 
     // apiRequests.add(options);
